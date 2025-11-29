@@ -90,6 +90,7 @@
 .card-header {
     background-color: #f8f9fc;
     border-bottom: 1px solid #e3e6f0;
+<<<<<<< HEAD
 }
 
 .badge-shopee {
@@ -99,4 +100,6 @@
 .text-shopee {
     color: #ee4d2d;
     font-weight: bold;
+=======
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
 }

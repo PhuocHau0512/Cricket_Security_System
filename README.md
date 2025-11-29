@@ -286,4 +286,8 @@ Dự án được phát triển cho mục đích học tập và nghiên cứu.
 Tác giả: Lê Phước Hậu - 2033221314
 Email: ph124work@gmail.com
 Trường: Đại học Công Thương Thành phố Hồ Chí Minh
+<<<<<<< HEAD
 Ngành: An toàn Thông tin
+=======
+Ngành: An toàn Thông tin
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb

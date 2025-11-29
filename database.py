@@ -65,6 +65,7 @@ def init_database():
         
         print("✅ Sample employees added!")
         
+<<<<<<< HEAD
         # --- TRONG FILE database.py ---
 
         # 1. TÀI SẢN THÔNG TIN (Dựa trên Chương 2 Đồ án)
@@ -76,6 +77,16 @@ def init_database():
             ('Dữ liệu Khách hàng (PII)', 'data', 'Tên, SĐT, Địa chỉ khách hàng từ đơn Shopee', 2, 'critical', 'high', 'medium'),
             ('File Sao kê Tài chính/Ngân hàng', 'financial', 'Dữ liệu đối soát doanh thu Shopee và Ngân hàng', 2, 'critical', 'critical', 'medium'),
             ('Google Drive Nội bộ', 'system', 'Lưu trữ quy trình vận hành và tài liệu công ty', 2, 'medium', 'medium', 'medium')
+=======
+        # Tài sản thông tin mẫu
+        assets_data = [
+            ('Tài khoản Admin Shopee', 'account', 'Tài khoản quản trị gian hàng Shopee chính', 1, 'critical', 'critical', 'high'),
+            ('Database khách hàng', 'data', 'Thông tin khách hàng từ đơn hàng Shopee', 1, 'high', 'high', 'medium'),
+            ('Tài khoản ngân hàng Vietcombank', 'financial', 'Tài khoản kết nối ngân hàng với Shopee', 2, 'critical', 'critical', 'medium'),
+            ('Hệ thống Sapo', 'system', 'Hệ thống quản lý bán hàng Sapo', 1, 'high', 'high', 'high'),
+            ('Google Drive nội bộ', 'data', 'Lưu trữ dữ liệu kinh doanh nội bộ', 2, 'medium', 'high', 'medium'),
+            ('Tài khoản Facebook Business', 'account', 'Tài khoản quảng cáo và fanpage', 1, 'high', 'medium', 'low')
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
         ]
         
         for asset in assets_data:
@@ -85,6 +96,7 @@ def init_database():
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """, asset)
         
+<<<<<<< HEAD
         print("✅ Đã thêm Tài sản đặc thù Shopee/Cricket!")
         
         # 2. KIỂM TRA BẢO MẬT (Dựa trên Chương 3 - Giải pháp)
@@ -95,6 +107,20 @@ def init_database():
             ('Scan Máy tính Vận hành', 'Quét virus các máy tính dùng để in đơn hàng', 'system', 1, 'weekly'),
             ('Kiểm tra Log Đăng nhập', 'Phát hiện IP lạ đăng nhập vào Shopee/Sapo', 'process', 1, 'weekly'),
             ('Backup Dữ liệu Đơn hàng', 'Sao lưu thủ công file Excel đơn hàng phòng khi mất Sapo', 'data', 1, 'weekly')
+=======
+        print("✅ Sample assets added!")
+        
+        # Kiểm tra bảo mật mẫu
+        checks_data = [
+            ('Xác thực 2FA Shopee', 'Kiểm tra xác thực 2 yếu tố cho tài khoản Shopee', 'account', 1, 'monthly'),
+            ('Chính sách mật khẩu', 'Kiểm tra mật khẩu mạnh và thay đổi định kỳ', 'account', 1, 'monthly'),
+            ('Phân quyền truy cập', 'Kiểm tra phân quyền nhân viên theo RBAC', 'account', 1, 'quarterly'),
+            ('Sao lưu dữ liệu', 'Kiểm tra quy trình sao lưu dữ liệu khách hàng', 'data', 1, 'weekly'),
+            ('Phần mềm diệt virus', 'Kiểm tra cập nhật phần mềm diệt virus', 'system', 1, 'daily'),
+            ('Kiểm tra session', 'Đảm bảo đăng xuất khi không sử dụng', 'account', 1, 'daily'),
+            ('Mã hóa dữ liệu', 'Kiểm tra mã hóa dữ liệu nhạy cảm', 'data', 1, 'monthly'),
+            ('Đào tạo nhận thức', 'Kiểm tra đào tạo nhận thức bảo mật', 'process', 1, 'quarterly')
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
         ]
         
         for check in checks_data:
@@ -103,6 +129,7 @@ def init_database():
                 VALUES (?, ?, ?, ?, ?)
             """, check)
         
+<<<<<<< HEAD
         print("✅ Đã thêm Checklist vận hành Shopee!")
         
         ## 3. ĐÁNH GIÁ RỦI RO (Dựa trên Risk Matrix 5x5 của đồ án)
@@ -112,6 +139,17 @@ def init_database():
             (4, 'Lộ thông tin khách hàng', 'Nhân viên tải file đơn hàng về máy cá nhân không bảo mật', 'possible', 'catastrophic', 'Phân quyền Sapo, Cấm USB, Giám sát log tải về'),
             (1, 'Mất Cookie trình duyệt', 'Máy tính vận hành bị dính mã độc đánh cắp session đăng nhập', 'possible', 'catastrophic', 'Phần mềm diệt virus, Không lưu mật khẩu trên trình duyệt'),
             (5, 'Gian lận tài chính nội bộ', 'Nhân viên sửa đổi file đối soát ngân hàng', 'unlikely', 'major', 'Quy trình đối soát chéo 2 lớp')
+=======
+        print("✅ Security checks added!")
+        
+        # Đánh giá rủi ro mẫu
+        risk_assessments_data = [
+            (1, 'Tấn công phishing chiếm đoạt tài khoản', 'Nhân viên không được đào tạo nhận diện phishing', 'possible', 'catastrophic', 'Sử dụng 2FA, đào tạo nhận thức'),
+            (2, 'Rò rỉ dữ liệu khách hàng', 'Dữ liệu không được mã hóa khi lưu trữ', 'likely', 'major', 'Mã hóa database, phân quyền truy cập'),
+            (3, 'Mất quyền kiểm soát tài chính', 'Kết nối API ngân hàng không an toàn', 'unlikely', 'catastrophic', 'Xác thực 2FA, giám sát giao dịch'),
+            (4, 'Đồng bộ dữ liệu thất bại', 'Lỗi kết nối giữa Shopee và Sapo', 'likely', 'moderate', 'Monitoring, backup manual'),
+            (5, 'Mã độc tống tiền', 'Nhân viên tải file đính kèm độc hại', 'possible', 'major', 'Antivirus, đào tạo nhận thức')
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
         ]
         
         for risk in risk_assessments_data:

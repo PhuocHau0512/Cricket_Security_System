@@ -1,12 +1,19 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash, g, make_response
+=======
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash, g
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
 import sqlite3
 import bcrypt
 from datetime import datetime
 import os
 import sys
+<<<<<<< HEAD
 import re
 import csv
 import io
+=======
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
 
 # Thêm thư mục gốc vào path để import config
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -67,6 +74,7 @@ def log_activity(user_id, activity_type, description, ip_address=None, user_agen
         db.commit()
     except Exception as e:
         print(f"Logging error: {e}")
+<<<<<<< HEAD
         
 def is_password_strong(password):
     """
@@ -86,6 +94,8 @@ def is_password_strong(password):
     if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
         return False
     return True
+=======
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
 
 # Routes
 @app.route('/')
@@ -283,6 +293,7 @@ def api_dashboard_stats():
         'check_results': check_results
     })
 
+<<<<<<< HEAD
 @app.route('/incidents')
 def incidents():
     if 'user_id' not in session:
@@ -457,6 +468,8 @@ def export_incidents():
     output.headers["Content-type"] = "text/csv; charset=utf-8-sig"
     return output
 
+=======
+>>>>>>> 87c9f0138c9bc1c7074ce34287c1461c2be81dcb
 if __name__ == '__main__':
     # Đảm bảo database tồn tại
     if not os.path.exists(Config.DATABASE_PATH):
