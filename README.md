@@ -121,11 +121,12 @@ Mở trình duyệt và truy cập: http://localhost:5000
 
 ## 🔑 Tài khoản mặc định
 
-|Username	|Password	|Vai trò	|Mô tả|
-|admin	|admin123	|Admin	|Toàn quyền hệ thống|
-|manager	|admin123	|Manager	|Quản lý rủi ro và kiểm tra|
-|staff1	|admin123	|Staff	|Xem báo cáo và thông tin|
-|staff2	|admin123	|Staff	|Xem báo cáo và thông tin|
+| Username | Password | Vai trò | Mô tả |
+|----------|----------|---------|--------|
+| `admin` | `admin123` | Admin | Toàn quyền hệ thống |
+| `manager` | `admin123` | Manager | Quản lý rủi ro và kiểm tra |
+| `staff1` | `admin123` | Staff | Xem báo cáo và thông tin |
+| `staff2` | `admin123` | Staff | Xem báo cáo và thông tin |
 
 
 ## 📊 Risk Matrix
