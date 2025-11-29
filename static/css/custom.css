@@ -1,0 +1,93 @@
+/* Custom styles for Cricket Security System */
+
+.risk-low {
+    background-color: #d4edda !important;
+}
+
+.risk-medium {
+    background-color: #fff3cd !important;
+}
+
+.risk-high {
+    background-color: #f8d7da !important;
+}
+
+.risk-extreme {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.stat-card {
+    transition: transform 0.2s ease-in-out;
+    border-left: 4px solid !important;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.sidebar {
+    background-color: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+}
+
+.navbar-brand {
+    font-weight: 800;
+}
+
+.risk-matrix td {
+    vertical-align: middle !important;
+    text-align: center;
+}
+
+.risk-item {
+    cursor: pointer;
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.risk-item:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        position: static;
+        height: auto;
+    }
+    
+    .risk-matrix {
+        font-size: 0.8rem;
+    }
+}
+
+/* Chart containers */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Custom badges */
+.badge {
+    font-size: 0.75em;
+}
+
+/* Table improvements */
+.table th {
+    border-top: none;
+    font-weight: 600;
+}
+
+/* Card shadows */
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
+}

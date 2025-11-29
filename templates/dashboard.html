@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cricket Security{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <span class="btn btn-sm btn-outline-secondary">{{ session.full_name }}</span>
+            <span class="btn btn-sm btn-outline-primary">{{ session.role|upper }}</span>
+        </div>
+    </div>
+</div>
+
+<!-- Thống kê tổng quan -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2 stat-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Tài sản thông tin
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_assets }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-database fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2 stat-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Rủi ro đánh giá
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_risks }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-danger shadow h-100 py-2 stat-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Sự cố đang mở
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ open_incidents }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-bug fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2 stat-card">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Kiểm tra bảo mật
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_checks }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ và thông tin -->
+<div class="row">
+    <!-- Biểu đồ phân bố rủi ro -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Phân bố mức độ rủi ro</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="riskDistributionChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu đồ kết quả kiểm tra -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Kết quả kiểm tra bảo mật</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                    <canvas id="checkResultsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sự cố gần đây -->
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Sự cố gần đây</h6>
+            </div>
+            <div class="card-body">
+                {% if recent_incidents %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Tiêu đề</th>
+                                    <th>Mức độ</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for incident in recent_incidents %}
+                                <tr>
+                                    <td>{{ incident.title }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if incident.severity == 'critical' %}danger{% elif incident.severity == 'high' %}warning{% else %}info{% endif %}">
+                                            {{ incident.severity }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if incident.status == 'resolved' %}success{% elif incident.status == 'investigating' %}warning{% else %}secondary{% endif %}">
+                                            {{ incident.status }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Không có sự cố nào.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Kiểm tra gần đây -->
+    <div class="col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Kiểm tra gần đây</h6>
+            </div>
+            <div class="card-body">
+                {% if recent_checks %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Kiểm tra</th>
+                                    <th>Kết quả</th>
+                                    <th>Ngày</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for check in recent_checks %}
+                                <tr>
+                                    <td>{{ check.check_name }}</td>
+                                    <td>
+                                        <span class="badge bg-{% if check.status == 'passed' %}success{% elif check.status == 'failed' %}danger{% else %}warning{% endif %}">
+                                            {{ check.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if check.check_date %}
+                                            {{ check.formatted_date }}
+                                        {% else %}
+                                            <span class="text-muted">Chưa kiểm tra</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Không có kiểm tra nào.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Biểu đồ phân bố rủi ro
+fetch('/api/dashboard-stats')
+    .then(response => response.json())
+    .then(data => {
+        // Risk Distribution Chart
+        const riskCtx = document.getElementById('riskDistributionChart').getContext('2d');
+        const riskLabels = Object.keys(data.risk_levels);
+        const riskData = Object.values(data.risk_levels);
+        const riskColors = {
+            'low': '#28a745',
+            'medium': '#ffc107', 
+            'high': '#fd7e14',
+            'extreme': '#dc3545'
+        };
+
+        new Chart(riskCtx, {
+            type: 'doughnut',
+            data: {
+                labels: riskLabels.map(label => label.charAt(0).toUpperCase() + label.slice(1)),
+                datasets: [{
+                    data: riskData,
+                    backgroundColor: riskLabels.map(label => riskColors[label] || '#6c757d')
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Check Results Chart
+        const checkCtx = document.getElementById('checkResultsChart').getContext('2d');
+        const checkLabels = Object.keys(data.check_results);
+        const checkData = Object.values(data.check_results);
+        const checkColors = {
+            'passed': '#28a745',
+            'failed': '#dc3545',
+            'na': '#6c757d'
+        };
+
+        new Chart(checkCtx, {
+            type: 'pie',
+            data: {
+                labels: checkLabels.map(label => label.charAt(0).toUpperCase() + label.slice(1)),
+                datasets: [{
+                    data: checkData,
+                    backgroundColor: checkLabels.map(label => checkColors[label] || '#6c757d')
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

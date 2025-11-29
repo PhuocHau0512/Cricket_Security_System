@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Matrix - Cricket Security{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-table"></i> Risk Assessment Matrix</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('add_risk') }}" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> Thêm đánh giá rủi ro
+        </a>
+    </div>
+</div>
+
+<!-- Risk Matrix -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Ma trận đánh giá rủi ro</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered risk-matrix">
+                <thead>
+                    <tr>
+                        <th rowspan="2" class="text-center align-middle">Khả năng xảy ra →<br>Mức độ tác động ↓</th>
+                        <th colspan="5" class="text-center">Khả năng xảy ra</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">Rất thấp<br>(1)</th>
+                        <th class="text-center">Thấp<br>(2)</th>
+                        <th class="text-center">Trung bình<br>(3)</th>
+                        <th class="text-center">Cao<br>(4)</th>
+                        <th class="text-center">Rất cao<br>(5)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set impacts = ['catastrophic', 'major', 'moderate', 'minor', 'insignificant'] %}
+                    {% set likelihoods = ['almost_certain', 'likely', 'possible', 'unlikely', 'rare'] %}
+                    
+                    {% for impact in impacts %}
+                    <tr>
+                        <td class="fw-bold">
+                            {% if impact == 'catastrophic' %}Thảm khốc (5)
+                            {% elif impact == 'major' %}Lớn (4)
+                            {% elif impact == 'moderate' %}Trung bình (3)
+                            {% elif impact == 'minor' %}Nhỏ (2)
+                            {% else %}Không đáng kể (1)
+                            {% endif %}
+                        </td>
+                        
+                        {% for likelihood in likelihoods %}
+                        {% set score = RISK_MATRIX[likelihood][impact] %}
+                        <td class="text-center 
+                            {% if score <= 4 %}risk-low
+                            {% elif score <= 9 %}risk-medium
+                            {% elif score <= 16 %}risk-high
+                            {% else %}risk-extreme text-white
+                            {% endif %}">
+                            
+                            <strong>{{ score }}</strong>
+                            <div class="small">
+                                {% for risk in risks %}
+                                {% if risk.likelihood == likelihood and risk.impact == impact %}
+                                <div class="risk-item" 
+                                     data-bs-toggle="tooltip" 
+                                     title="{{ risk.asset_name }}: {{ risk.threat_description }}">
+                                    • {{ risk.asset_name[:15] }}...
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chú thích -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Chú thích mức độ rủi ro</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <span class="badge risk-low p-2 w-100">1-4: Thấp</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <span class="badge risk-medium p-2 w-100">5-9: Trung bình</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <span class="badge risk-high p-2 w-100">10-16: Cao</span>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <span class="badge risk-extreme p-2 w-100 text-white">17-25: Rất cao</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách rủi ro</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Tài sản</th>
+                                <th>Mức độ</th>
+                                <th>Điểm</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for risk in risks %}
+                            <tr>
+                                <td>{{ risk.asset_name }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if risk.risk_level == 'low' %}risk-low
+                                        {% elif risk.risk_level == 'medium' %}risk-medium
+                                        {% elif risk.risk_level == 'high' %}risk-high
+                                        {% else %}risk-extreme text-white
+                                        {% endif %}">
+                                        {{ risk.risk_level }}
+                                    </span>
+                                </td>
+                                <td>{{ risk.risk_score }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Kích hoạt tooltip
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+</script>
+{% endblock %}
