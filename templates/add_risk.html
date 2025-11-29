@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm Rủi Ro - Cricket Security{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-plus-circle"></i> Thêm Đánh Giá Rủi Ro</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('risk_matrix') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Thông tin rủi ro</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="asset_id" class="form-label">Tài sản thông tin *</label>
+                        <select class="form-select" id="asset_id" name="asset_id" required>
+                            <option value="">Chọn tài sản...</option>
+                            {% for asset in assets %}
+                            <option value="{{ asset.id }}">{{ asset.asset_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="threat_description" class="form-label">Mô tả mối đe dọa *</label>
+                        <textarea class="form-control" id="threat_description" name="threat_description" 
+                                  rows="3" placeholder="Mô tả chi tiết mối đe dọa..." required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="vulnerability_description" class="form-label">Mô tả điểm yếu *</label>
+                        <textarea class="form-control" id="vulnerability_description" name="vulnerability_description" 
+                                  rows="3" placeholder="Mô tả điểm yếu bảo mật..." required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="likelihood" class="form-label">Khả năng xảy ra *</label>
+                                <select class="form-select" id="likelihood" name="likelihood" required>
+                                    <option value="">Chọn khả năng...</option>
+                                    <option value="rare">Rất thấp (1)</option>
+                                    <option value="unlikely">Thấp (2)</option>
+                                    <option value="possible">Trung bình (3)</option>
+                                    <option value="likely">Cao (4)</option>
+                                    <option value="almost_certain">Rất cao (5)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="impact" class="form-label">Mức độ tác động *</label>
+                                <select class="form-select" id="impact" name="impact" required>
+                                    <option value="">Chọn mức độ...</option>
+                                    <option value="insignificant">Không đáng kể (1)</option>
+                                    <option value="minor">Nhỏ (2)</option>
+                                    <option value="moderate">Trung bình (3)</option>
+                                    <option value="major">Lớn (4)</option>
+                                    <option value="catastrophic">Thảm khốc (5)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="existing_controls" class="form-label">Biện pháp kiểm soát hiện tại</label>
+                        <textarea class="form-control" id="existing_controls" name="existing_controls" 
+                                  rows="2" placeholder="Mô tả các biện pháp kiểm soát đang áp dụng..."></textarea>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Lưu ý:</strong> Hệ thống sẽ tự động tính điểm rủi ro dựa trên khả năng xảy ra và mức độ tác động.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Lưu đánh giá
+                    </button>
+                    <a href="{{ url_for('risk_matrix') }}" class="btn btn-secondary">Hủy bỏ</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Hướng dẫn đánh giá</h6>
+            </div>
+            <div class="card-body">
+                <h6>Khả năng xảy ra:</h6>
+                <ul class="small">
+                    <li><strong>Rất thấp:</strong> Rất khó xảy ra (1-2 năm/lần)</li>
+                    <li><strong>Thấp:</strong> Khó xảy ra (1 năm/lần)</li>
+                    <li><strong>Trung bình:</strong> Có thể xảy ra (6 tháng/lần)</li>
+                    <li><strong>Cao:</strong> Dễ xảy ra (1 tháng/lần)</li>
+                    <li><strong>Rất cao:</strong> Rất dễ xảy ra (1 tuần/lần)</li>
+                </ul>
+
+                <h6>Mức độ tác động:</h6>
+                <ul class="small">
+                    <li><strong>Không đáng kể:</strong> Thiệt hại nhỏ, không ảnh hưởng hoạt động</li>
+                    <li><strong>Nhỏ:</strong> Thiệt hại có thể khắc phục nhanh</li>
+                    <li><strong>Trung bình:</strong> Ảnh hưởng đến một phần hoạt động</li>
+                    <li><strong>Lớn:</strong> Ảnh hưởng nghiêm trọng đến hoạt động</li>
+                    <li><strong>Thảm khốc:</strong> Ảnh hưởng toàn bộ hệ thống, mất dữ liệu</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

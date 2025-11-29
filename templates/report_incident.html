@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Báo cáo Sự cố - Cricket Security{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Báo cáo Sự cố An ninh Mới</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('incidents') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại danh sách
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-danger text-white">
+                <h6 class="m-0 font-weight-bold"><i class="fas fa-exclamation-triangle"></i> Thông tin sự cố</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Tiêu đề sự cố *</label>
+                        <input type="text" class="form-control" id="title" name="title" required 
+                               placeholder="VD: Nhận được email giả mạo Shopee yêu cầu đăng nhập">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="incident_type" class="form-label">Loại sự cố *</label>
+                            <select class="form-select" id="incident_type" name="incident_type" required>
+                                <option value="">Chọn loại sự cố...</option>
+                                <option value="phishing">Phishing / Giả mạo (Email/Tin nhắn)</option>
+                                <option value="account_compromise">Nghi ngờ lộ tài khoản</option>
+                                <option value="data_breach">Rò rỉ dữ liệu</option>
+                                <option value="malware">Mã độc / Virus</option>
+                                <option value="dos">Tấn công từ chối dịch vụ</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="severity" class="form-label">Mức độ nghiêm trọng (Đánh giá sơ bộ) *</label>
+                            <select class="form-select" id="severity" name="severity" required>
+                                <option value="low">Thấp (Không ảnh hưởng ngay)</option>
+                                <option value="medium">Trung bình (Có rủi ro tiềm ẩn)</option>
+                                <option value="high">Cao (Ảnh hưởng đến vận hành)</option>
+                                <option value="critical">Nghiêm trọng (Dừng hoạt động/Mất dữ liệu)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Mô tả chi tiết *</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required
+                                  placeholder="Mô tả chi tiết những gì đã xảy ra, thời gian phát hiện, và các bằng chứng liên quan..."></textarea>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle"></i> Vui lòng báo cáo ngay lập tức khi phát hiện dấu hiệu bất thường. Báo cáo của bạn giúp bảo vệ hệ thống Cricket.
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-paper-plane"></i> Gửi báo cáo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Security Checks - Cricket Security{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-check-circle"></i> Kiểm Tra Bảo Mật</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCheckModal">
+            <i class="fas fa-plus"></i> Thêm kiểm tra
+        </button>
+    </div>
+</div>
+
+<!-- Bộ lọc -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <select class="form-select" id="categoryFilter">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="account">Tài khoản</option>
+                    <option value="data">Dữ liệu</option>
+                    <option value="system">Hệ thống</option>
+                    <option value="process">Quy trình</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="statusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="passed">Đạt</option>
+                    <option value="failed">Không đạt</option>
+                    <option value="na">Không áp dụng</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <select class="form-select" id="frequencyFilter">
+                    <option value="">Tất cả tần suất</option>
+                    <option value="daily">Hàng ngày</option>
+                    <option value="weekly">Hàng tuần</option>
+                    <option value="monthly">Hàng tháng</option>
+                    <option value="quarterly">Hàng quý</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Danh sách kiểm tra -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách kiểm tra bảo mật</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="checksTable">
+                <thead>
+                    <tr>
+                        <th>Tên kiểm tra</th>
+                        <th>Danh mục</th>
+                        <th>Tần suất</th>
+                        <th>Lần kiểm tra cuối</th>
+                        <th>Kết quả</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for check in checks %}
+                    <tr class="check-row" 
+                        data-category="{{ check.category }}"
+                        data-status="{{ check.last_status or '' }}"
+                        data-frequency="{{ check.frequency }}">
+                        <td>
+                            <strong>{{ check.check_name }}</strong>
+                            {% if not check.is_required %}
+                            <span class="badge bg-secondary">Tùy chọn</span>
+                            {% endif %}
+                            <br>
+                            <small class="text-muted">{{ check.description }}</small>
+                        </td>
+                        <td>
+                            <span class="badge 
+                                {% if check.category == 'account' %}bg-primary
+                                {% elif check.category == 'data' %}bg-success
+                                {% elif check.category == 'system' %}bg-warning
+                                {% else %}bg-info{% endif %}">
+                                {{ check.category }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-dark">{{ check.frequency }}</span>
+                        </td>
+                        <td>
+                            {% if check.last_check %}
+                                {{ check.last_check }}
+                            {% else %}
+                                <span class="text-muted">Chưa kiểm tra</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if check.last_status %}
+                                <span class="badge 
+                                    {% if check.last_status == 'passed' %}bg-success
+                                    {% elif check.last_status == 'failed' %}bg-danger
+                                    {% else %}bg-warning{% endif %}">
+                                    {{ check.last_status }}
+                                </span>
+                                {% if check.last_notes %}
+                                <br><small class="text-muted">{{ check.last_notes[:50] }}...</small>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-secondary">Chưa kiểm tra</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#recordResultModal"
+                                    data-check-id="{{ check.id }}"
+                                    data-check-name="{{ check.check_name }}">
+                                <i class="fas fa-clipboard-check"></i> Ghi kết quả
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal ghi kết quả -->
+<div class="modal fade" id="recordResultModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ghi kết quả kiểm tra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="recordResultForm">
+                <div class="modal-body">
+                    <input type="hidden" id="check_id" name="check_id">
+                    <div class="mb-3">
+                        <label class="form-label">Kiểm tra:</label>
+                        <p class="form-control-plaintext" id="modalCheckName"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Kết quả *</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option value="">Chọn kết quả...</option>
+                            <option value="passed">Đạt</option>
+                            <option value="failed">Không đạt</option>
+                            <option value="na">Không áp dụng</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                  placeholder="Ghi chú về kết quả kiểm tra..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu kết quả</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Bộ lọc bảng
+function filterTable() {
+    const category = $('#categoryFilter').val();
+    const status = $('#statusFilter').val();
+    const frequency = $('#frequencyFilter').val();
+    
+    $('.check-row').each(function() {
+        const rowCategory = $(this).data('category');
+        const rowStatus = $(this).data('status');
+        const rowFrequency = $(this).data('frequency');
+        
+        const showCategory = !category || rowCategory === category;
+        const showStatus = !status || rowStatus === status;
+        const showFrequency = !frequency || rowFrequency === frequency;
+        
+        $(this).toggle(showCategory && showStatus && showFrequency);
+    });
+}
+
+$('#categoryFilter, #statusFilter, #frequencyFilter').on('change', filterTable);
+
+// Modal ghi kết quả
+$('#recordResultModal').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget);
+    const checkId = button.data('check-id');
+    const checkName = button.data('check-name');
+    
+    const modal = $(this);
+    modal.find('#check_id').val(checkId);
+    modal.find('#modalCheckName').text(checkName);
+});
+
+// Xử lý form ghi kết quả
+$('#recordResultForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    // Ở đây bạn có thể thêm code để gửi dữ liệu đến server
+    alert('Chức năng này đang được phát triển. Trong phiên bản thực tế, kết quả sẽ được lưu vào database.');
+    $('#recordResultModal').modal('hide');
+});
+
+// Khởi tạo DataTable (nếu cần)
+$(document).ready(function() {
+    $('#checksTable').DataTable({
+        pageLength: 25,
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+        }
+    });
+});
+</script>
+{% endblock %}
